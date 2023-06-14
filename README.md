@@ -5,7 +5,7 @@ Bypass 401 &amp; 403 and scans multiple endpoints only output 200 or 500
 INSTALLATION
 
 
-git clone https://github.com/gotr00t0day/forbiddenpass.git
+git clone https://github.com/qafro1/bypassCheck.git
 
 cd forbiddenpass
 

@@ -15,18 +15,10 @@ python3 forbiddenpass.py -h
 
 USAGE
 
-
-___________         ___.   .__    .___  .___           __________                                        
-\_   _____/_________\_ |__ |__| __| _/__| _/____   ____\                
- |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \|           
- |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \                   
- \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /               
-     \/                  \/        \/    \/    \/     \/   v0.1           
-                                                                                                         
-                                                                                                         
-                                                                                                         
-usage: forbiddenpass.py [-h] [-p domain.com] [-d filename.txt] [-t site.com]                             
-                                                                                                         
+   v0.1           
+                                                                                                                                                                                                             
+                                                                                                                                   
+usage: forbiddenpass.py [-h] [-p domain.com] [-d filename.txt] [-t site.com]                                                                                                           
 optional arguments:                                                                                      
   -h, --help            show this help message and exit                                                  
   -f filename.txt       scan multipule endpoints

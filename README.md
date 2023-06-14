@@ -2,7 +2,7 @@
 Bypass 401 &amp; 403 and scans multiple endpoints only output 200 or 500   
 
 
-INSTALLATION
+# INSTALLATION
 
 
 git clone https://github.com/qafro1/bypasscheck.git
@@ -13,7 +13,7 @@ pip3 install -r requirements.txt
 
 python3 forbiddenpass.py -h
 
-USAGE
+# USAGE
 
    v0.1           
                                                                                                                                                                                                              
@@ -36,7 +36,7 @@ optional arguments:
                         domain to check 
                         
                         
-EXAMPLE
+# EXAMPLE
 
 scan  multi endpoints target
 
@@ -54,7 +54,7 @@ scan a single target with a path
 
 python3 forbiddenpass.py -t https://site --path login
 
-DISCLAIMER
+# DISCLAIMER
 
 inspired by https://github.com/gotr00t0day/forbiddenpass
  

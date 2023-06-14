@@ -19,13 +19,19 @@ USAGE
                                                                                                                                                                                                              
                                                                                                                                    
 usage: forbiddenpass.py [-h] [-p domain.com] [-d filename.txt] [-t site.com]                                                                                                           
-optional arguments:                                                                                      
-  -h, --help            show this help message and exit                                                  
+
+optional arguments:  
+
+  -h, --help            show this help message and exit  
+  
   -f filename.txt       scan multipule endpoints
+  
   -p domain.com, --path domain.com                                                                       
-                        path to check                                                                    
+                        path to check    
+                        
   -d filename.txt, --domains filename.txt                                                                
-                        domains to check                                                                 
+                        domains to check   
+                        
   -t site.com, --target site.com                                                                         
                         domain to check 
                         

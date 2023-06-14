@@ -146,3 +146,4 @@ if __name__ == "__main__":
             executor.map(main, wordlist)
     except KeyboardInterrupt:
         sys.exit(0)
+

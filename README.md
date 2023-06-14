@@ -40,7 +40,7 @@ optional arguments:
 
 scan  multi endpoints target
 
-python bypasscheck.py -f endpoints.txt
+python3 bypasscheck.py -f endpoints.txt
 
 domains to check
 

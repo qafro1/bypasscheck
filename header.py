@@ -53,7 +53,7 @@ def get_headers(path=None, method='GET'):
         with open('lowercase-headers.txt', 'r') as f:
             lowercase_headers = [x.strip() for x in f.readlines()]
             for header in lowercase_headers:
-                headers.append({'User-Agent': str(ua.chrome), header: '127.0.0.1', 'X-HTTP-Method-Override': method})
+                headers.append({'User-Agent': str(ua.chrome), header: '127.0.0.1'})
     except FileNotFoundError as fnf_err:
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)

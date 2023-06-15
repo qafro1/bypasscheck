@@ -18,3 +18,5 @@ X-Https
 X-Original-Url
 X-Original-User-Agent
 X-Originating-Ip
+X-HTTP-Method-Override
+

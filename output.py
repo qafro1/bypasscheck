@@ -1,6 +1,5 @@
 from colorama import Fore, Style
 from fake_useragent import UserAgent
-import concurrent.futures
 import requests
 import argparse
 import json
@@ -56,7 +55,11 @@ def get_headers(path=None, method='GET'):
         with open('lowercase-headers.txt', 'r') as f:
             lowercase_headers = [x.strip() for x in f.readlines()]
             for header in lowercase_headers:
-                headers.append({'User-Agent': str(ua.chrome), header: '127.0.0.1'})
+                # Split header into name and value
+                name, value = header.split(':', 1)
+                name = name.strip()
+                if name:
+                    headers.append({'User-Agent': str(ua.chrome), name: value.strip()})
     except FileNotFoundError as fnf_err:
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)
@@ -85,21 +88,21 @@ def do_request(url, stream=False, path=None, method='GET'):
 
 
 def main():
-    wordlist = read_wordlist("bypasses.txt")
+    bypass_list = read_wordlist("bypasses.txt")
 
     if args.domains:
         if args.path:
             print(Fore.CYAN + "Checking domains to bypass....")
             checklist = read_wordlist(args.domains)
             for line in checklist:
-                for bypass in wordlist:
+                for bypass in bypass_list:
                     links = f"{line}/{args.path}{bypass}"
                     do_request(links, stream=True, path=args.path)
         else:
             print(Fore.CYAN + "Checking domains to bypass....")
             checklist = read_wordlist(args.domains)
             for line in checklist:
-                for bypass in wordlist:
+                for bypass in bypass_list:
                     links = f"{line}{bypass}"
                     do_request(links, stream=True)
     elif args.file:
@@ -107,27 +110,27 @@ def main():
             print(Fore.CYAN + "Checking endpoints to bypass....")
             endpoints = read_wordlist(args.file)
             for endpoint in endpoints:
-                for bypass in wordlist:
+                for bypass in bypass_list:
                     links = f"{endpoint}/{args.path}{bypass}"
                     do_request(links, stream=True, path=args.path)
         else:
             print(Fore.CYAN + "Checking endpoints to bypass....")
             endpoints = read_wordlist(args.file)
             for endpoint in endpoints:
-                for bypass in wordlist:
+                for bypass in bypass_list:
                     links = f"{endpoint}{bypass}"
                     do_request(links, stream=True)
     if args.target:
         if args.path:
             print(Fore.GREEN + f"Checking {args.target}...")
             for method in http_methods:
-                for bypass in wordlist:
+                for bypass in bypass_list:
                     links = f"{args.target}/{args.path}{bypass}"
                     do_request(links, path=args.path, method=method)
         else:
             print(Fore.GREEN + f"Checking {args.target}...")
             for method in http_methods:
-                for bypass in wordlist:
+                for bypass in bypass_list:
                     links = f"{args.target}{bypass}"
                     do_request(links, method=method)
 

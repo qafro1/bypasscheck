@@ -1,4 +1,4 @@
-#python output.py -f example.txt -o /tmp/results.txt
+#python script.py -o output.txt
 
 from colorama import Fore, Style
 from fake_useragent import UserAgent
@@ -14,7 +14,7 @@ ___________         ___.   .__    .___  .___
  |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
  |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
  \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-     \/                  \/        \/    \/    \/     \/    v1.2
+     \/                  \/        \/    \/    \/     \/    v1.0
 
 """
 
@@ -31,7 +31,7 @@ parser.add_argument('-t', '--target', action='store', help="domain to check", me
 
 parser.add_argument('-f', '--file', action='store', help="file containing multiple API endpoints", metavar="endpoints.txt")
 
-parser.add_argument('-o', '--output', action='store', help="output file to save results", metavar="results.txt")
+parser.add_argument('-o', '--output', action='store', help="output file path", metavar="output.txt")
 
 args = parser.parse_args()
 
@@ -48,9 +48,7 @@ def read_wordlist(wordlist):
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)
 
-
 wordlist = read_wordlist("bypasses.txt")
-
 
 def get_headers(path=None, method='GET'):
     headers = [
@@ -71,8 +69,7 @@ def get_headers(path=None, method='GET'):
     
     return headers
 
-
-def do_request(url, stream=False, path=None, method='GET', output_file=None):
+def do_request(url, stream=False, path=None, method='GET'):
     headers = get_headers(path=path, method=method)
     try:
         for header in headers:
@@ -82,19 +79,15 @@ def do_request(url, stream=False, path=None, method='GET', output_file=None):
                 r = requests.request(method, url, headers=header)
             if r.status_code == 200 or r.status_code >= 500:
                 status_color = Fore.GREEN if r.status_code == 200 else Fore.RED
-                result = f"{url} {json.dumps(list(header.items())[-1])} [{r.status_code}]\n"
-                if output_file:
-                    with open(output_file, 'a') as f:
-                        f.write(result)
-                else:
-                    print(result)
+                result = f"{url} {json.dumps(list(header.items())[-1])} {status_color}[{r.status_code}]{Style.RESET_ALL}"
+                print(result)
+                if args.output:
+                    with open(args.output, 'a') as f:
+                        f.write(result + '\n')
     except requests.exceptions.RequestException as err:
         print("Some Ambiguous Exception:", err)
 
-
 def main(wordlist):
-    output_file = args.output if args.output else None
-
     if args.domains:
         if args.path:
             print(Fore.CYAN + "Checking domains to bypass....")
@@ -102,14 +95,14 @@ def main(wordlist):
             for line in checklist:
                 for bypass in wordlist:
                     links = f"{line}/{args.path}{bypass}"
-                    do_request(links, stream=True, path=args.path, output_file=output_file)
+                    do_request(links, stream=True, path=args.path)
         else:
             print(Fore.CYAN + "Checking domains to bypass....")
             checklist = read_wordlist(args.domains)
             for line in checklist:
                 for bypass in wordlist:
                     links = f"{line}{bypass}"
-                    do_request(links, stream=True, output_file=output_file)
+                    do_request(links, stream=True)
     elif args.file:
         if args.path:
             print(Fore.CYAN + "Checking endpoints to bypass....")
@@ -117,28 +110,27 @@ def main(wordlist):
             for endpoint in endpoints:
                 for bypass in wordlist:
                     links = f"{endpoint}/{args.path}{bypass}"
-                    do_request(links, stream=True, path=args.path, output_file=output_file)
+                    do_request(links, stream=True, path=args.path)
         else:
             print(Fore.CYAN + "Checking endpoints to bypass....")
             endpoints = read_wordlist(args.file)
             for endpoint in endpoints:
                 for bypass in wordlist:
                     links = f"{endpoint}{bypass}"
-                    do_request(links, stream=True, output_file=output_file)
+                    do_request(links, stream=True)
     if args.target:
         if args.path:
             print(Fore.GREEN + f"Checking {args.target}...")
             for method in http_methods:
                 for bypass in wordlist:
                     links = f"{args.target}/{args.path}{bypass}"
-                    do_request(links, path=args.path, method=method, output_file=output_file)
+                    do_request(links, path=args.path, method=method)
         else:
             print(Fore.GREEN + f"Checking {args.target}...")
             for method in http_methods:
                 for bypass in wordlist:
                     links = f"{args.target}{bypass}"
-                    do_request(links, method=method, output_file=output_file)
-
+                    do_request(links, method=method)
 
 if __name__ == "__main__":
     try:

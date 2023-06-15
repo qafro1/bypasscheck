@@ -44,24 +44,13 @@ def read_wordlist(wordlist):
 
 
 def get_headers(path=None, method='GET'):
-    headers = [{'User-Agent': str(ua.chrome)}]  # Initialize headers with User-Agent
-
     # Read additional headers from lowercase-headers.txt file
     try:
-        with open('lowercase-headers.txt', 'r') as f:
-            lowercase_headers = [x.strip() for x in f.readlines()]
-            for header in lowercase_headers:
-                # Split header into name and value
-                header_parts = header.split(':', 1)
-                if len(header_parts) == 2:
-                    name, value = header_parts
-                    name = name.strip()
-                    headers.append({name: value.strip()})
+        with open("lowercase-headers.txt") as file_in:
+            return [line.strip() for line in file_in.readlines()]
     except FileNotFoundError as fnf_err:
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)
-
-    return headers
 
 
 def do_request(url, stream=False, path=None, method='GET'):

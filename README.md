@@ -34,6 +34,8 @@ optional arguments:
                         
   -t site.com, --target site.com                                                                         
                         domain to check 
+  -o provide the output file path using the -o or --output
+
                         
                         
 # EXAMPLE
@@ -58,7 +60,7 @@ python3 bypasscheck.py -t https://site --path login
 # Header scan
 ## This runs a wordlist of large headers - Takes a long time and might hit api limits.
 
-python3 header.py -f endpoints.txt
+python3 header.py -f endpoints.txt -o output.txt
 
 
 # DISCLAIMER

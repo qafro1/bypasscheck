@@ -12,7 +12,7 @@ ___________         ___.   .__    .___  .___
  |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
  |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
  \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-     \/                  \/        \/    \/    \/     \/    v1.0
+     \/                  \/        \/    \/    \/     \/    v1.4
 
 """
 
@@ -29,6 +29,8 @@ parser.add_argument('-t', '--target', action='store', help="domain to check", me
 
 parser.add_argument('-f', '--file', action='store', help="file containing multiple API endpoints", metavar="endpoints.txt")
 
+parser.add_argument('-o', '--output', action='store', help="output file path", metavar="output.txt")
+
 args = parser.parse_args()
 
 ua = UserAgent()
@@ -44,9 +46,7 @@ def read_wordlist(wordlist):
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)
 
-
 wordlist = read_wordlist("bypasses.txt")
-
 
 def get_headers(path=None, method='GET'):
     headers = [
@@ -67,7 +67,6 @@ def get_headers(path=None, method='GET'):
     
     return headers
 
-
 def do_request(url, stream=False, path=None, method='GET'):
     headers = get_headers(path=path, method=method)
     try:
@@ -78,10 +77,13 @@ def do_request(url, stream=False, path=None, method='GET'):
                 r = requests.request(method, url, headers=header)
             if r.status_code == 200 or r.status_code >= 500:
                 status_color = Fore.GREEN if r.status_code == 200 else Fore.RED
-                print(f"{Fore.WHITE}{url} {json.dumps(list(header.items())[-1])} {status_color}[{r.status_code}]{Style.RESET_ALL}")
+                result = f"{url} {json.dumps(list(header.items())[-1])} {status_color}[{r.status_code}]{Style.RESET_ALL}"
+                print(result)
+                if args.output:
+                    with open(args.output, 'a') as f:
+                        f.write(result + '\n')
     except requests.exceptions.RequestException as err:
         print("Some Ambiguous Exception:", err)
-
 
 def main(wordlist):
     if args.domains:
@@ -127,7 +129,6 @@ def main(wordlist):
                 for bypass in wordlist:
                     links = f"{args.target}{bypass}"
                     do_request(links, method=method)
-
 
 if __name__ == "__main__":
     try:

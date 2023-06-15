@@ -70,7 +70,9 @@ def get_headers(path=None, method='GET'):
         {'User-Agent': str(ua.chrome), 'X-Host': 'http://127.0.0.1'},
         {'User-Agent': str(ua.chrome), 'X-Forwarded-Host': 'http://127.0.0.1'},
         {'User-Agent': str(ua.chrome), 'X-ProxyUser-Ip': '127.0.0.1'},
-        {'User-Agent': str(ua.chrome), 'X-rewrite-url': path or '/'}
+        {'User-Agent': str(ua.chrome), 'X-rewrite-url': path or '/'},
+        {'User-Agent': str(ua.chrome), 'X-Original-URL': '/admin/console'},
+        {'User-Agent': str(ua.chrome), 'X-Rewrite-URL': '/admin/console'}
     ]
     return headers
 

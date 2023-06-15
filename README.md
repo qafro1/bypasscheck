@@ -34,6 +34,7 @@ optional arguments:
                         
   -t site.com, --target site.com                                                                         
                         domain to check 
+                        
   -o provide the output file path using the -o or --output
 
                         

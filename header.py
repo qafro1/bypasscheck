@@ -1,6 +1,5 @@
 from colorama import Fore, Style
 from fake_useragent import UserAgent
-import concurrent.futures
 import requests
 import argparse
 import json
@@ -12,7 +11,7 @@ ___________         ___.   .__    .___  .___
  |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
  |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
  \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-     \/                  \/        \/    \/    \/     \/    v1.9
+     \/                  \/        \/    \/    \/     \/    v2.0
 
 """
 
@@ -34,6 +33,7 @@ ua = UserAgent()
 # List of HTTP verbs/methods to fuzz
 http_methods = ['GET', 'HEAD', 'POST', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PUT', 'INVENTED']
 
+
 def read_wordlist(wordlist):
     try:
         with open(wordlist, 'r') as f:
@@ -42,10 +42,12 @@ def read_wordlist(wordlist):
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)
 
+
 def get_headers(path=None, method='GET'):
     headers = [
         {'User-Agent': str(ua.chrome), 'X-Original-URL': path or '/'},
-        {'User-Agent': str(ua.chrome), 'X-Custom-IP-Authorization': '127.0.0.1','X-Original-URL': '/admin/console','X-Rewrite-URL': '/admin/console'}
+        {'User-Agent': str(ua.chrome), 'X-Custom-IP-Authorization': '127.0.0.1', 'X-Original-URL': '/admin/console',
+         'X-Rewrite-URL': '/admin/console'}
     ]
 
     # Read additional headers from lowercase-headers.txt file
@@ -53,12 +55,18 @@ def get_headers(path=None, method='GET'):
         with open('lowercase-headers.txt', 'r') as f:
             lowercase_headers = [x.strip() for x in f.readlines()]
             for header in lowercase_headers:
-                headers.append({'User-Agent': str(ua.chrome), header: '127.0.0.1', 'X-HTTP-Method-Override': method})
+                # Split header into name and value
+                header_parts = header.split(':', 1)
+                if len(header_parts) == 2:
+                    name, value = header_parts
+                    name = name.strip()
+                    headers.append({'User-Agent': str(ua.chrome), name: value.strip()})
     except FileNotFoundError as fnf_err:
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)
 
     return headers
+
 
 def do_request(url, stream=False, path=None, method='GET'):
     headers = get_headers(path=path, method=method)
@@ -79,22 +87,23 @@ def do_request(url, stream=False, path=None, method='GET'):
     except requests.exceptions.RequestException as err:
         print("Some Ambiguous Exception:", err)
 
+
 def main():
-    wordlist = read_wordlist("bypasses.txt")
+    bypass_list = read_wordlist("bypasses.txt")
 
     if args.domains:
         if args.path:
             print(Fore.CYAN + "Checking domains to bypass....")
             checklist = read_wordlist(args.domains)
             for line in checklist:
-                for bypass in wordlist:
+                for bypass in bypass_list:
                     links = f"{line}/{args.path}{bypass}"
                     do_request(links, stream=True, path=args.path)
         else:
             print(Fore.CYAN + "Checking domains to bypass....")
             checklist = read_wordlist(args.domains)
             for line in checklist:
-                for bypass in wordlist:
+                for bypass in bypass_list:
                     links = f"{line}{bypass}"
                     do_request(links, stream=True)
     elif args.file:
@@ -102,29 +111,30 @@ def main():
             print(Fore.CYAN + "Checking endpoints to bypass....")
             endpoints = read_wordlist(args.file)
             for endpoint in endpoints:
-                for bypass in wordlist:
+                for bypass in bypass_list:
                     links = f"{endpoint}/{args.path}{bypass}"
                     do_request(links, stream=True, path=args.path)
         else:
             print(Fore.CYAN + "Checking endpoints to bypass....")
             endpoints = read_wordlist(args.file)
             for endpoint in endpoints:
-                for bypass in wordlist:
+                for bypass in bypass_list:
                     links = f"{endpoint}{bypass}"
                     do_request(links, stream=True)
     if args.target:
         if args.path:
             print(Fore.GREEN + f"Checking {args.target}...")
             for method in http_methods:
-                for bypass in wordlist:
+                for bypass in bypass_list:
                     links = f"{args.target}/{args.path}{bypass}"
                     do_request(links, path=args.path, method=method)
         else:
             print(Fore.GREEN + f"Checking {args.target}...")
             for method in http_methods:
-                for bypass in wordlist:
+                for bypass in bypass_list:
                     links = f"{args.target}{bypass}"
                     do_request(links, method=method)
+
 
 if __name__ == "__main__":
     try:

@@ -11,7 +11,7 @@ ___________         ___.   .__    .___  .___
  |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
  |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
  \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-     \/                  \/        \/    \/    \/     \/    v2.0
+     \/                  \/        \/    \/    \/     \/    v2.1
 
 """
 
@@ -44,12 +44,8 @@ def read_wordlist(wordlist):
 
 
 def get_headers(path=None, method='GET'):
-    headers = [
-        #{'User-Agent': str(ua.chrome), 'X-Original-URL': path or '/'},
-        #{'User-Agent': str(ua.chrome), 'X-Custom-IP-Authorization': '127.0.0.1', 'X-Original-URL': '/admin/console',
-        # 'X-Rewrite-URL': '/admin/console'}
-    
-    ]
+    headers = []
+
     # Read additional headers from lowercase-headers.txt file
     try:
         with open('lowercase-headers.txt', 'r') as f:
@@ -64,7 +60,7 @@ def get_headers(path=None, method='GET'):
     except FileNotFoundError as fnf_err:
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)
-    
+
     return headers
 
 

@@ -30,5 +30,6 @@
 /%252e%252e/
 /%c0%af/
 /%e0%80%af
+/admin/console
 
 

@@ -56,7 +56,7 @@ python3 bypasscheck.py -t https://site --path login
 
 
 # Header scan
-# This runs a wordlist of large headers - Takes a long time and might hit api limits.
+## This runs a wordlist of large headers - Takes a long time and might hit api limits.
 
 python3 header.py -f endpoints.txt
 

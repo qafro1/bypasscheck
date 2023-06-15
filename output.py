@@ -2,7 +2,6 @@ from colorama import Fore, Style
 from fake_useragent import UserAgent
 import requests
 import argparse
-import json
 import sys
 
 banner = r"""
@@ -11,7 +10,7 @@ ___________         ___.   .__    .___  .___
  |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
  |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
  \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-     \/                  \/        \/    \/    \/     \/    v2.3
+     \/                  \/        \/    \/    \/     \/    v0.1
 
 """
 
@@ -44,7 +43,6 @@ def read_wordlist(wordlist):
 
 
 def get_headers(path=None, method='GET'):
-    # Read additional headers from lowercase-headers.txt file
     try:
         with open("lowercase-headers.txt") as file_in:
             return [line.strip() for line in file_in.readlines()]
@@ -59,12 +57,12 @@ def do_request(url, stream=False, path=None, method='GET'):
         for header in headers:
             session = requests.Session()
             if stream:
-                r = session.request(method, url, stream=True, headers=json.loads(header) if header else {})
+                r = session.request(method, url, stream=True, headers=header)
             else:
-                r = session.request(method, url, headers=json.loads(header) if header else {})
+                r = session.request(method, url, headers=header)
             if r.status_code == 200 or r.status_code >= 500:
                 status_color = Fore.GREEN if r.status_code == 200 else Fore.RED
-                result = f"{url} {json.dumps(list(header.items())[-1])} {status_color}[{r.status_code}]{Style.RESET_ALL}"
+                result = f"{url} {header} {status_color}[{r.status_code}]{Style.RESET_ALL}"
                 print(result)
                 if args.output:
                     with open(args.output, 'a') as f:

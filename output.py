@@ -1,3 +1,5 @@
+#python output.py -f example.txt -o /tmp/results.txt
+
 from colorama import Fore, Style
 from fake_useragent import UserAgent
 import concurrent.futures
@@ -12,7 +14,7 @@ ___________         ___.   .__    .___  .___
  |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
  |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
  \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-     \/                  \/        \/    \/    \/     \/    v1.1
+     \/                  \/        \/    \/    \/     \/    v1.2
 
 """
 

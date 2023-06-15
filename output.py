@@ -3,8 +3,8 @@ from fake_useragent import UserAgent
 import concurrent.futures
 import requests
 import argparse
-import sys
 import json
+import sys
 
 banner = r"""
 ___________         ___.   .__    .___  .___           
@@ -81,8 +81,9 @@ def do_request(url, stream=False, path=None, method='GET'):
         print("Some Ambiguous Exception:", err)
 
 def main():
+    wordlist = read_wordlist("bypasses.txt")
+    
     if args.domains:
-        wordlist = read_wordlist("bypasses.txt")
         if args.path:
             print(Fore.CYAN + "Checking domains to bypass....")
             checklist = read_wordlist(args.domains)
@@ -98,7 +99,6 @@ def main():
                     links = f"{line}{bypass}"
                     do_request(links, stream=True)
     elif args.file:
-        wordlist = read_wordlist("bypasses.txt")
         if args.path:
             print(Fore.CYAN + "Checking endpoints to bypass....")
             endpoints = read_wordlist(args.file)
@@ -114,7 +114,6 @@ def main():
                     links = f"{endpoint}{bypass}"
                     do_request(links, stream=True)
     if args.target:
-        wordlist = read_wordlist("bypasses.txt")
         if args.path:
             print(Fore.GREEN + f"Checking {args.target}...")
             for method in http_methods:

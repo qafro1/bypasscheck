@@ -12,7 +12,7 @@ ___________         ___.   .__    .___  .___
  |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
  |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
  \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-     \/                  \/        \/    \/    \/     \/    v1.9
+     \/                  \/        \/    \/    \/     \/    v2.0
 
 """
 
@@ -34,6 +34,7 @@ ua = UserAgent()
 # List of HTTP verbs/methods to fuzz
 http_methods = ['GET', 'HEAD', 'POST', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PUT', 'INVENTED']
 
+
 def read_wordlist(wordlist):
     try:
         with open(wordlist, 'r') as f:
@@ -42,10 +43,12 @@ def read_wordlist(wordlist):
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)
 
+
 def get_headers(path=None, method='GET'):
     headers = [
         {'User-Agent': str(ua.chrome), 'X-Original-URL': path or '/'},
-        {'User-Agent': str(ua.chrome), 'X-Custom-IP-Authorization': '127.0.0.1','X-Original-URL': '/admin/console','X-Rewrite-URL': '/admin/console'}
+        {'User-Agent': str(ua.chrome), 'X-Custom-IP-Authorization': '127.0.0.1', 'X-Original-URL': '/admin/console',
+         'X-Rewrite-URL': '/admin/console'}
     ]
 
     # Read additional headers from lowercase-headers.txt file
@@ -53,12 +56,13 @@ def get_headers(path=None, method='GET'):
         with open('lowercase-headers.txt', 'r') as f:
             lowercase_headers = [x.strip() for x in f.readlines()]
             for header in lowercase_headers:
-                headers.append({'User-Agent': str(ua.chrome), header: '127.0.0.1', 'X-HTTP-Method-Override': method})
+                headers.append({'User-Agent': str(ua.chrome), header: '127.0.0.1'})
     except FileNotFoundError as fnf_err:
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)
 
     return headers
+
 
 def do_request(url, stream=False, path=None, method='GET'):
     headers = get_headers(path=path, method=method)
@@ -78,6 +82,7 @@ def do_request(url, stream=False, path=None, method='GET'):
                         f.write(result + '\n')
     except requests.exceptions.RequestException as err:
         print("Some Ambiguous Exception:", err)
+
 
 def main():
     wordlist = read_wordlist("bypasses.txt")
@@ -125,6 +130,7 @@ def main():
                 for bypass in wordlist:
                     links = f"{args.target}{bypass}"
                     do_request(links, method=method)
+
 
 if __name__ == "__main__":
     try:

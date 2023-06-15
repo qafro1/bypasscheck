@@ -44,7 +44,7 @@ def read_wordlist(wordlist):
 
 
 def get_headers(path=None, method='GET'):
-    headers = []
+    headers = []  # Define headers as an empty list
     
     # Read additional headers from lowercase-headers.txt file
     try:

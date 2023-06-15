@@ -12,7 +12,7 @@ ___________         ___.   .__    .___  .___
  |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
  |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
  \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-     \/                  \/        \/    \/    \/     \/    v1.7
+     \/                  \/        \/    \/    \/     \/    v1.9
 
 """
 
@@ -44,11 +44,10 @@ def read_wordlist(wordlist):
 
 def get_headers(path=None, method='GET'):
     headers = [
-        {'User-Agent': str(ua.chrome), 'X-HTTP-Method-Override': method},
         {'User-Agent': str(ua.chrome), 'X-Original-URL': path or '/', 'X-HTTP-Method-Override': method},
-        {'User-Agent': str(ua.chrome), 'X-Custom-IP-Authorization': '127.0.0.1','X-Original-URL': '/admin/console','X-Rewrite-URL': '/admin/console','X-HTTP-Method-Override': method}
+        {'User-Agent': str(ua.chrome), 'X-Custom-IP-Authorization': '127.0.0.1','X-Original-URL': '/admin/console','X-Rewrite-URL': '/admin/console'}
     ]
-    
+
     # Read additional headers from lowercase-headers.txt file
     try:
         with open('lowercase-headers.txt', 'r') as f:
@@ -58,18 +57,18 @@ def get_headers(path=None, method='GET'):
     except FileNotFoundError as fnf_err:
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)
-    
+
     return headers
 
 def do_request(url, stream=False, path=None, method='GET'):
     headers = get_headers(path=path, method=method)
     try:
         for header in headers:
+            session = requests.Session()
             if stream:
-                with requests.Session() as session:
-                    r = session.request(method, url, stream=True, headers=header)
+                r = session.request(method, url, stream=True, headers=header)
             else:
-                r = requests.request(method, url, headers=header)
+                r = session.request(method, url, headers=header)
             if r.status_code == 200 or r.status_code >= 500:
                 status_color = Fore.GREEN if r.status_code == 200 else Fore.RED
                 result = f"{url} {json.dumps(list(header.items())[-1])} {status_color}[{r.status_code}]{Style.RESET_ALL}"
@@ -82,7 +81,7 @@ def do_request(url, stream=False, path=None, method='GET'):
 
 def main():
     wordlist = read_wordlist("bypasses.txt")
-    
+
     if args.domains:
         if args.path:
             print(Fore.CYAN + "Checking domains to bypass....")

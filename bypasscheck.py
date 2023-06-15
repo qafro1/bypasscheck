@@ -72,7 +72,8 @@ def get_headers(path=None, method='GET'):
         {'User-Agent': str(ua.chrome), 'X-ProxyUser-Ip': '127.0.0.1'},
         {'User-Agent': str(ua.chrome), 'X-rewrite-url': path or '/'},
         {'User-Agent': str(ua.chrome), 'X-Original-URL': '/admin/console'},
-        {'User-Agent': str(ua.chrome), 'X-Rewrite-URL': '/admin/console'}
+        {'User-Agent': str(ua.chrome), 'X-Rewrite-URL': '/admin/console'},
+        {'User-Agent': str(ua.chrome), 'Cluster-Client-IP': '127.0.0.1'}
     ]
     return headers
 

@@ -56,9 +56,10 @@ def get_headers(path=None, method='GET'):
             lowercase_headers = [x.strip() for x in f.readlines()]
             for header in lowercase_headers:
                 # Split header into name and value
-                name, value = header.split(':', 1)
-                name = name.strip()
-                if name:
+                header_parts = header.split(':', 1)
+                if len(header_parts) == 2:
+                    name, value = header_parts
+                    name = name.strip()
                     headers.append({'User-Agent': str(ua.chrome), name: value.strip()})
     except FileNotFoundError as fnf_err:
         print(f"FileNotFoundError: {fnf_err}")

@@ -45,7 +45,6 @@ def read_wordlist(wordlist):
 
 def get_headers(path=None, method='GET'):
     headers = []
-
     # Read additional headers from lowercase-headers.txt file
     try:
         with open('lowercase-headers.txt', 'r') as f:
@@ -60,7 +59,7 @@ def get_headers(path=None, method='GET'):
     except FileNotFoundError as fnf_err:
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)
-
+    
     return headers
 
 

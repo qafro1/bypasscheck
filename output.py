@@ -59,9 +59,9 @@ def do_request(url, stream=False, path=None, method='GET'):
         for header in headers:
             session = requests.Session()
             if stream:
-                r = session.request(method, url, stream=True, headers=json.loads(header))
+                r = session.request(method, url, stream=True, headers=json.loads(header) if header else {})
             else:
-                r = session.request(method, url, headers=json.loads(header))
+                r = session.request(method, url, headers=json.loads(header) if header else {})
             if r.status_code == 200 or r.status_code >= 500:
                 status_color = Fore.GREEN if r.status_code == 200 else Fore.RED
                 result = f"{url} {json.dumps(list(header.items())[-1])} {status_color}[{r.status_code}]{Style.RESET_ALL}"

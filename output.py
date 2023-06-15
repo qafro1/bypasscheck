@@ -11,7 +11,7 @@ ___________         ___.   .__    .___  .___
  |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
  |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
  \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-     \/                  \/        \/    \/    \/     \/    v2.1
+     \/                  \/        \/    \/    \/     \/    v2.2
 
 """
 
@@ -45,6 +45,7 @@ def read_wordlist(wordlist):
 
 def get_headers(path=None, method='GET'):
     headers = []
+    
     # Read additional headers from lowercase-headers.txt file
     try:
         with open('lowercase-headers.txt', 'r') as f:

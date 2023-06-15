@@ -21,20 +21,26 @@ print(Fore.CYAN + banner)
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
 
-group.add_argument('-p', '--path', action='store', type=str, help='path to check', metavar='domain.com')
+group.add_argument('-p', '--path', action='store',
+                   type=str, help='path to check',
+                   metavar='domain.com')
 
-parser.add_argument('-d', '--domains', action='store', help="domains to check", metavar="filename.txt")
+parser.add_argument('-d', '--domains', action='store',
+                    help="domains to check",
+                    metavar="filename.txt")
 
-parser.add_argument('-t', '--target', action='store', help="domain to check", metavar="site.com")
+parser.add_argument('-t', '--target', action='store',
+                    help="domain to check",
+                    metavar="site.com")
 
-parser.add_argument('-f', '--file', action='store', help="file containing multiple API endpoints", metavar="endpoints.txt")
+parser.add_argument('-f', '--file', action='store',
+                    help="file containing multiple API endpoints",
+                    metavar="endpoints.txt")
 
 args = parser.parse_args()
 
 ua = UserAgent()
 
-# List of HTTP verbs/methods to fuzz
-http_methods = ['GET', 'HEAD', 'POST', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PUT', 'INVENTED']
 
 def read_wordlist(wordlist):
     try:
@@ -48,12 +54,11 @@ def read_wordlist(wordlist):
 wordlist = read_wordlist("bypasses.txt")
 
 
-def get_headers(path=None, method='GET'):
+def get_headers(path=None):
     headers = [
-        {'User-Agent': str(ua.chrome), 'X-HTTP-Method-Override': method},
-        {'User-Agent': str(ua.chrome), 'X-Original-URL': path or '/', 'X-HTTP-Method-Override': method},
-        {'User-Agent': str(ua.chrome), 'X-Custom-IP-Authorization': '127.0.0.1', 'X-HTTP-Method-Override': method},
-        # Add more headers with different combinations of HTTP verbs and other headers
+        {'User-Agent': str(ua.chrome)},
+        {'User-Agent': str(ua.chrome), 'X-Original-URL': path or '/'},
+        {'User-Agent': str(ua.chrome), 'X-Custom-IP-Authorization': '127.0.0.1'},
         {'User-Agent': str(ua.chrome), 'X-Forwarded-For': 'http://127.0.0.1'},
         {'User-Agent': str(ua.chrome), 'X-Forwarded-For': '127.0.0.1:80'},
         {'User-Agent': str(ua.chrome), 'X-Originally-Forwarded-For': '127.0.0.1'},
@@ -75,17 +80,18 @@ def get_headers(path=None, method='GET'):
     return headers
 
 
-def do_request(url, stream=False, path=None, method='GET'):
-    headers = get_headers(path=path, method=method)
+def do_request(url, stream=False, path=None):
+    headers = get_headers(path=path)
     try:
         for header in headers:
             if stream:
-                r = requests.request(method, url, stream=True, headers=header)
+                r = requests.get(url, stream=True, headers=header)
             else:
-                r = requests.request(method, url, headers=header)
+                r = requests.get(url, headers=header)
             if r.status_code == 200 or r.status_code == 500:
                 status_color = Fore.GREEN if r.status_code == 200 else Fore.RED
-                print(f"{Fore.WHITE}{url} {json.dumps(list(header.items())[-1])} {status_color}[{r.status_code}]{Style.RESET_ALL}")
+                print(
+                    f"{Fore.WHITE}{url} {json.dumps(list(header.items())[-1])} {status_color}[{r.status_code}]{Style.RESET_ALL}")
     except requests.exceptions.RequestException as err:
         print("Some Ambiguous Exception:", err)
 
@@ -124,16 +130,14 @@ def main(wordlist):
     if args.target:
         if args.path:
             print(Fore.GREEN + f"Checking {args.target}...")
-            for method in http_methods:
-                for bypass in wordlist:
-                    links = f"{args.target}/{args.path}{bypass}"
-                    do_request(links, path=args.path, method=method)
+            for bypass in wordlist:
+                links = f"{args.target}/{args.path}{bypass}"
+                do_request(links, path=args.path)
         else:
             print(Fore.GREEN + f"Checking {args.target}...")
-            for method in http_methods:
-                for bypass in wordlist:
-                    links = f"{args.target}{bypass}"
-                    do_request(links, method=method)
+            for bypass in wordlist:
+                links = f"{args.target}{bypass}"
+                do_request(links)
 
 
 if __name__ == "__main__":
@@ -142,3 +146,4 @@ if __name__ == "__main__":
             executor.map(main, wordlist)
     except KeyboardInterrupt:
         sys.exit(0)
+

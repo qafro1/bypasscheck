@@ -54,7 +54,7 @@ def get_headers(path=None, method='GET'):
         {'User-Agent': str(ua.chrome), 'X-Original-URL': path or '/', 'X-HTTP-Method-Override': method},
         {'User-Agent': str(ua.chrome), 'X-Custom-IP-Authorization': '127.0.0.1', 'X-HTTP-Method-Override': method},
         # Add more headers with different combinations of HTTP verbs and other headers
-         {'User-Agent': str(ua.chrome), 'X-Forwarded-For': 'http://127.0.0.1'},
+        {'User-Agent': str(ua.chrome), 'X-Forwarded-For': 'http://127.0.0.1'},
         {'User-Agent': str(ua.chrome), 'X-Forwarded-For': '127.0.0.1:80'},
         {'User-Agent': str(ua.chrome), 'X-Originally-Forwarded-For': '127.0.0.1'},
         {'User-Agent': str(ua.chrome), 'X-Originating-': 'http://127.0.0.1'},

@@ -54,6 +54,13 @@ scan a single target with a path
 
 python3 bypasscheck.py -t https://site --path login
 
+
+# Header scan
+# This runs a wordlist of large headers - Takes a long time and might hit api limits.
+
+python3 header.py -f endpoints.txt
+
+
 # DISCLAIMER
 
 inspired by https://github.com/gotr00t0day/forbiddenpass

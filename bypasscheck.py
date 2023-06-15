@@ -83,7 +83,7 @@ def do_request(url, stream=False, path=None, method='GET'):
                 r = requests.request(method, url, stream=True, headers=header)
             else:
                 r = requests.request(method, url, headers=header)
-            if r.status_code == 200 or r.status_code == 500:
+            if r.status_code == 200 or r.status_code >= 500:
                 status_color = Fore.GREEN if r.status_code == 200 else Fore.RED
                 print(f"{Fore.WHITE}{url} {json.dumps(list(header.items())[-1])} {status_color}[{r.status_code}]{Style.RESET_ALL}")
     except requests.exceptions.RequestException as err:

@@ -3,8 +3,8 @@ from fake_useragent import UserAgent
 import concurrent.futures
 import requests
 import argparse
-import sys
 import json
+import sys
 
 banner = r"""
 ___________         ___.   .__    .___  .___           
@@ -12,7 +12,7 @@ ___________         ___.   .__    .___  .___
  |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
  |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
  \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-     \/                  \/        \/    \/    \/     \/    v1.4
+     \/                  \/        \/    \/    \/     \/    v1.6
 
 """
 
@@ -22,13 +22,9 @@ parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
 
 group.add_argument('-p', '--path', action='store', type=str, help='path to check', metavar='domain.com')
-
 parser.add_argument('-d', '--domains', action='store', help="domains to check", metavar="filename.txt")
-
 parser.add_argument('-t', '--target', action='store', help="domain to check", metavar="site.com")
-
 parser.add_argument('-f', '--file', action='store', help="file containing multiple API endpoints", metavar="endpoints.txt")
-
 parser.add_argument('-o', '--output', action='store', help="output file path", metavar="output.txt")
 
 args = parser.parse_args()
@@ -45,8 +41,6 @@ def read_wordlist(wordlist):
     except FileNotFoundError as fnf_err:
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)
-
-wordlist = read_wordlist("bypasses.txt")
 
 def get_headers(path=None, method='GET'):
     headers = [
@@ -72,7 +66,8 @@ def do_request(url, stream=False, path=None, method='GET'):
     try:
         for header in headers:
             if stream:
-                r = requests.request(method, url, stream=True, headers=header)
+                with requests.Session() as session:
+                    r = session.request(method, url, stream=True, headers=header)
             else:
                 r = requests.request(method, url, headers=header)
             if r.status_code == 200 or r.status_code >= 500:
@@ -85,7 +80,9 @@ def do_request(url, stream=False, path=None, method='GET'):
     except requests.exceptions.RequestException as err:
         print("Some Ambiguous Exception:", err)
 
-def main(wordlist):
+def main():
+    wordlist = read_wordlist("bypasses.txt")
+    
     if args.domains:
         if args.path:
             print(Fore.CYAN + "Checking domains to bypass....")
@@ -132,7 +129,6 @@ def main(wordlist):
 
 if __name__ == "__main__":
     try:
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.map(main, wordlist)
+        main()
     except KeyboardInterrupt:
         sys.exit(0)

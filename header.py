@@ -45,9 +45,9 @@ def read_wordlist(wordlist):
 
 def get_headers(path=None, method='GET'):
     headers = [
-        #{'User-Agent': str(ua.chrome), 'X-Original-URL': path or '/'},
-        #{'User-Agent': str(ua.chrome), 'X-Custom-IP-Authorization': '127.0.0.1', 'X-Original-URL': '/admin/console',
-        # 'X-Rewrite-URL': '/admin/console'}
+        {'User-Agent': str(ua.chrome), 'X-Original-URL': path or '/'},
+        {'User-Agent': str(ua.chrome), 'X-Custom-IP-Authorization': '127.0.0.1', 'X-Original-URL': '/admin/console',
+         'X-Rewrite-URL': '/admin/console'}
     
     ]
     # Read additional headers from lowercase-headers.txt file

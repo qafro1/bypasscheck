@@ -40,7 +40,7 @@ def get_headers(path=None, method="GET"):
         {"User-Agent": str(ua.chrome), "X-Original-URL": "/admin/console"},
         {"User-Agent": str(ua.chrome), "X-Rewrite-URL": "/admin/console"},
         {"User-Agent": str(ua.chrome), "Cluster-Client-IP": "127.0.0.1"},
-        {"User-Agent": str(ua.chrome), "X-HTTP-Method-Override": method},
+        {"User-Agent": str(ua.chrome), "X-HTTP-Method-Override": method}
     ]
     return headers
 
@@ -117,7 +117,7 @@ if __name__ == "__main__":
      |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
      |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
      \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-         \/                  \/        \/    \/    \/     \/    v0.03
+         \/                  \/        \/    \/    \/     \/    v0.04
     
     """
     print(Fore.CYAN + banner)

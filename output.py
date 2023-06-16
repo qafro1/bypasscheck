@@ -10,7 +10,7 @@ ___________         ___.   .__    .___  .___
  |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
  |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
  \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-     \/                  \/        \/    \/    \/     \/    v0.01
+     \/                  \/        \/    \/    \/     \/    v0.02
 
 """
 
@@ -80,6 +80,22 @@ def do_request(url, stream=False, path=None, method='GET'):
 
 def main():
     bypass_list = read_wordlist("bypasses.txt")
+
+    print(Fore.YELLOW + "Contents of lowercase-headers.txt:")
+    try:
+        with open("lowercase-headers.txt") as file_in:
+            print(file_in.read())
+    except FileNotFoundError as fnf_err:
+        print(f"FileNotFoundError: {fnf_err}")
+        sys.exit(1)
+
+    print(Fore.YELLOW + "Contents of bypasses.txt:")
+    try:
+        with open("bypasses.txt") as file_in:
+            print(file_in.read())
+    except FileNotFoundError as fnf_err:
+        print(f"FileNotFoundError: {fnf_err}")
+        sys.exit(1)
 
     if args.domains:
         print(Fore.CYAN + "Checking domains to bypass....")

@@ -1,5 +1,5 @@
 from colorama import Fore, Style
-from fake_user_agents import UserAgent
+from fake_useragent import UserAgent
 import requests
 import argparse
 import sys

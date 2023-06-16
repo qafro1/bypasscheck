@@ -5,14 +5,13 @@ import argparse
 import sys
 import json
 
-
 banner = r"""
 ___________         ___.   .__    .___  .___           
 \_   _____/_________\_ |__ |__| __| _/__| _/____   ____
  |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
  |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
  \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-     \/                  \/        \/    \/    \/     \/    v0.1
+     \/                  \/        \/    \/    \/     \/    v0.01
 
 """
 
@@ -47,7 +46,11 @@ def read_wordlist(wordlist):
 def get_headers(path=None, method='GET'):
     try:
         with open("lowercase-headers.txt") as file_in:
-            return [line.strip() for line in file_in.readlines()]
+            headers = {}
+            for line in file_in.readlines():
+                key, value = line.strip().split(':', 1)
+                headers[key.strip()] = value.strip()
+            return headers
     except FileNotFoundError as fnf_err:
         print(f"FileNotFoundError: {fnf_err}")
         sys.exit(1)
@@ -56,15 +59,15 @@ def get_headers(path=None, method='GET'):
 def do_request(url, stream=False, path=None, method='GET'):
     headers = get_headers(path=path, method=method)
     try:
-        for header in headers:
+        for header, value in headers.items():
             session = requests.Session()
             if stream:
-                r = session.request(method, url, stream=True, headers=header)
+                r = session.request(method, url, stream=True, headers={header: value})
             else:
-                r = session.request(method, url, headers=header)
+                r = session.request(method, url, headers={header: value})
             if r.status_code == 200 or r.status_code >= 500:
                 status_color = Fore.GREEN if r.status_code == 200 else Fore.RED
-                result = f"{url} {header} {status_color}[{r.status_code}]{Style.RESET_ALL}"
+                result = f"{url} {header}: {value} {status_color}[{r.status_code}]{Style.RESET_ALL}"
                 print(result)
                 if args.output:
                     with open(args.output, 'a') as f:

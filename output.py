@@ -1,5 +1,5 @@
 from colorama import Fore, Style
-from fake_useragent import UserAgent
+from fake_user_agents import UserAgent
 import requests
 import argparse
 import sys
@@ -28,7 +28,7 @@ parser.add_argument('-o', '--output', action='store', help="output file path", m
 
 args = parser.parse_args()
 
-ua = UserAgent()
+ua = UserAgent(verify_ssl=False)
 
 # List of HTTP verbs/methods to fuzz
 http_methods = ['GET', 'HEAD', 'POST', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PUT', 'INVENTED']

@@ -64,7 +64,8 @@ def get_headers(path=None, method='GET'):
             
             # Add the additional headers to the list
             for header in additional_headers:
-                headers.append({'User-Agent': str(ua.chrome), header})
+                headers.append({'User-Agent': str(ua.chrome), 'Additional-Header': header})
+
                 
     except FileNotFoundError as fnf_err:
         print(f"FileNotFoundError: {fnf_err}")

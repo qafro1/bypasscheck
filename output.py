@@ -48,8 +48,10 @@ def get_headers(path=None, method='GET'):
         with open("lowercase-headers.txt") as file_in:
             headers = {}
             for line in file_in.readlines():
-                key, value = line.strip().split(':', 1)
-                headers[key.strip()] = value.strip()
+                line = line.strip()
+                if ':' in line:
+                    key, value = line.split(':', 1)
+                    headers[key.strip()] = value.strip()
             return headers
     except FileNotFoundError as fnf_err:
         print(f"FileNotFoundError: {fnf_err}")

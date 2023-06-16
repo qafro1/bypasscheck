@@ -3,7 +3,6 @@ from fake_useragent import UserAgent
 import requests
 import argparse
 import sys
-import json
 
 banner = r"""
 ___________         ___.   .__    .___  .___           
@@ -75,7 +74,8 @@ def do_request(url, stream=False, path=None, method='GET'):
                     with open(args.output, 'a') as f:
                         f.write(result + '\n')
     except requests.exceptions.RequestException as err:
-        print("Some Ambiguous Exception:", err)
+        print("RequestException:", err)
+        sys.exit(1)
 
 
 def main():

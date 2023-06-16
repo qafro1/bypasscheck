@@ -2,3 +2,5 @@ colorama
 requests
 fake-useragent
 argparse
+fake-user-agent
+

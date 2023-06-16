@@ -1,5 +1,5 @@
 from colorama import Fore, Style
-from fake_user_agent import UserAgent
+from fake_useragent import UserAgent
 import requests
 import argparse
 import sys
@@ -80,20 +80,20 @@ def main():
         checklist = read_wordlist(args.domains)
         for line in checklist:
             for bypass in bypass_list:
-                links = f"{line}/{args.path}{bypass}" if args.path else f"{line}{bypass}"
+                links = f"{line}/{args.path}" if args.path else f"{line}"
                 do_request(links, stream=True, path=args.path)
     elif args.file:
         print(Fore.CYAN + "Checking endpoints to bypass....")
         endpoints = read_wordlist(args.file)
         for endpoint in endpoints:
             for bypass in bypass_list:
-                links = f"{endpoint}/{args.path}{bypass}" if args.path else f"{endpoint}{bypass}"
+                links = f"{endpoint}/{args.path}" if args.path else f"{endpoint}"
                 do_request(links, stream=True, path=args.path)
     elif args.target:
         print(Fore.GREEN + f"Checking {args.target}...")
         for method in http_methods:
             for bypass in bypass_list:
-                links = f"{args.target}/{args.path}{bypass}" if args.path else f"{args.target}{bypass}"
+                links = f"{args.target}/{args.path}" if args.path else f"{args.target}"
                 do_request(links, path=args.path, method=method)
 
 

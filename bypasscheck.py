@@ -54,9 +54,12 @@ def do_request(url, stream=False, path=None, method="GET"):
                 r = requests.request(method, url, headers=header)
             if r.status_code == 200 or r.status_code >= 500:
                 status_color = Fore.GREEN if r.status_code == 200 else Fore.RED
-                print(
-                    f"{Fore.WHITE}{url} {json.dumps(list(header.items())[-1])} {status_color}[{r.status_code}]{Style.RESET_ALL}"
-                )
+                output_line = f"{Fore.WHITE}{url} {json.dumps(list(header.items())[-1])} {status_color}[{r.status_code}]{Style.RESET_ALL}"
+                if output_file:
+                    with open(output_file, "a") as f:
+                        f.write(output_line + "\n")
+                else:
+                    print(output_line)
     except requests.exceptions.RequestException as err:
         print("Some Ambiguous Exception:", err)
 
@@ -114,7 +117,7 @@ if __name__ == "__main__":
      |    __)/  _ \_  __ \ __ \|  |/ __ |/ __ |/ __ \ /    \
      |     \(  <_> )  | \/ \_\ \  / /_/ / /_/ \  ___/|   |  \ 
      \___  / \____/|__|  |___  /__\____ \____ |\___  >___|  /
-         \/                  \/        \/    \/    \/     \/    v0.02
+         \/                  \/        \/    \/    \/     \/    v0.03
     
     """
     print(Fore.CYAN + banner)
@@ -123,33 +126,23 @@ if __name__ == "__main__":
     group = parser.add_mutually_exclusive_group()
 
     group.add_argument(
-        "-p", "--path", action="store", type=str, help="path to check", metavar="domain.com"
+        "-p", "--path", action="store", help="add a path to bypass", metavar="path"
     )
-
+    group.add_argument(
+        "-d", "--domains", action="store", help="check a list of domains to bypass"
+    )
+    group.add_argument(
+        "-f", "--file", action="store", help="check a list of endpoints to bypass"
+    )
     parser.add_argument(
-        "-d", "--domains", action="store", help="domains to check", metavar="filename.txt"
+        "-t", "--target", action="store", help="single target to check", metavar="target"
     )
-
-    parser.add_argument(
-        "-t", "--target", action="store", help="domain to check", metavar="site.com"
-    )
-
-    parser.add_argument(
-        "-f",
-        "--file",
-        action="store",
-        help="file containing multiple API endpoints",
-        metavar="endpoints.txt",
-    )
-
     parser.add_argument(
         "-o", "--output", action="store", help="output file path", metavar="output.txt"
     )
 
     args = parser.parse_args()
 
-    try:
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.submit(main, args)
-    except KeyboardInterrupt:
-        sys.exit(0)
+    output_file = args.output
+
+    main(args)
